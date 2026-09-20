@@ -2,19 +2,20 @@
 
 import { Toaster as Sonner } from "sonner";
 
-/** Dark-glass themed toast host */
+/** Paper toast host — white card, hairline border, ink text. */
 function Toaster() {
   return (
     <Sonner
-      theme="dark"
+      theme="light"
       position="top-center"
       toastOptions={{
         style: {
-          background: "rgba(18, 22, 28, 0.92)",
-          border: "1px solid rgba(255,255,255,0.1)",
-          color: "#f2f5f7",
-          backdropFilter: "blur(16px)",
-          borderRadius: "0.9rem",
+          background: "#ffffff",
+          border: "1px solid var(--line-strong)",
+          color: "var(--ink)",
+          boxShadow: "0 12px 32px -12px rgba(29,26,22,0.28)",
+          borderRadius: "8px",
+          fontSize: "13.5px",
         },
       }}
     />

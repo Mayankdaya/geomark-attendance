@@ -1,7 +1,10 @@
 import { Radar } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/** GeoMark brand mark — radar glyph in an emerald gradient tile. */
+/**
+ * GeoMark brand — an ink tile with the radar glyph, wordmark set in
+ * Instrument Serif with an italic accent. Quiet, editorial, no gradients.
+ */
 export function Logo({
   size = "md",
   withWordmark = true,
@@ -12,32 +15,22 @@ export function Logo({
   className?: string;
 }) {
   const tile = {
-    sm: "h-8 w-8 rounded-lg",
-    md: "h-10 w-10 rounded-xl",
-    lg: "h-14 w-14 rounded-2xl",
+    sm: "h-7 w-7 rounded-[6px]",
+    md: "h-9 w-9 rounded-[7px]",
+    lg: "h-14 w-14 rounded-[10px]",
   }[size];
-  const icon = { sm: "h-4 w-4", md: "h-5 w-5", lg: "h-7 w-7" }[size];
-  const text = { sm: "text-base", md: "text-lg", lg: "text-2xl" }[size];
+  const icon = { sm: "h-3.5 w-3.5", md: "h-4.5 w-4.5", lg: "h-7 w-7" }[size];
+  const text = { sm: "text-[17px]", md: "text-[21px]", lg: "text-[30px]" }[size];
 
   return (
     <div className={cn("flex items-center gap-2.5", className)}>
-      <div
-        className={cn(
-          "grid place-items-center bg-gradient-to-br from-emerald-400 to-teal-600 text-emerald-950 shadow-[0_8px_24px_-6px_rgba(16,185,129,0.6)]",
-          tile,
-        )}
-      >
-        <Radar className={icon} strokeWidth={2.4} />
+      <div className={cn("grid place-items-center bg-ink text-paper", tile)}>
+        <Radar className={icon} strokeWidth={2} />
       </div>
       {withWordmark && (
-        <div className="leading-none">
-          <span className={cn("font-display font-bold tracking-tight text-zinc-50", text)}>
-            Geo
-          </span>
-          <span className={cn("font-display font-bold tracking-tight text-gradient", text)}>
-            Mark
-          </span>
-        </div>
+        <span className={cn("font-display leading-none tracking-tight text-ink", text)}>
+          Geo<em className="italic">Mark</em>
+        </span>
       )}
     </div>
   );

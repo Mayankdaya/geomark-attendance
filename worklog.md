@@ -41,3 +41,28 @@ Stage Summary:
 - Demo accounts: sarah@campus.edu/teacher123 (teacher), alex@campus.edu/student123 (student) — one-click prefills on the login card.
 - Design decisions: Firebase replaced by Prisma/SQLite so the preview is fully functional without user credentials (data model 1:1 mirrors the Firestore spec); single-route SPA per sandbox constraint; live updates via 3 s polling (WebSocket available if needed later); Demo GPS simulator added so the geofence success/failure paths are testable without physically moving.
 - All original spec requirements implemented: 10-min auto-expiry, 30 m Haversine geofence, ±20 m accuracy gate, one-mark-per-session dedup, timestamp+distance per record, <75% red warning, CSV export, real-time list, mobile-first premium UI.
+
+---
+Task ID: 3
+Agent: Super Z (main agent)
+Task: Restyle the entire Next.js GPS attendance app because "the ui looks ai generated" — replace the dark glassmorphism/emerald-gradient look with a genuinely designed, human-feeling visual language.
+
+Work Log:
+- Diagnosed the AI-slop tells in the previous UI: aurora blur orbs, glass panels with backdrop-blur, emerald/teal gradient text & buttons, glow shadows, rounded-2xl everywhere, Sora/Inter fonts.
+- Defined a new "Academic Register" design language: warm paper background (#f6f3ec) with faint graph-paper grain, ink text (#1d1a16), registrar-green accent (#206a4d, semantic "present"), clay red for errors/<75% flags, ochre warnings; hairline borders (1px #e4dfd2), 6-8px radii, zero gradients/glass/glow.
+- Typography: Instrument Serif (display, with italic accents), Instrument Sans (UI), IBM Plex Mono (all figures, coords, timestamps, codes) via next/font/google in layout.tsx.
+- Rewrote globals.css tokens (--paper/--ink/--line/--leaf/--clay/--ochre mapped into Tailwind 4 @theme inline) and kept functional animations (live-dot, radar, shimmer, pop-in) recolored to the new palette.
+- Restyled all 14 ui primitives: ink-green solid buttons, registrar "stamp" badges (uppercase 4px-radius), white hairline cards, underline tabs, square initials tiles, paper dialogs/popovers/dropdowns, light paper toasts.
+- Redesigned logo (ink tile + serif wordmark with italic "Mark") and countdown ring (3px hairline arc, serif tabular numerals, no glow).
+- Rebuilt landing.tsx: editorial hero with serif headline + italic "actually", numbered 01/02/03 ledger features, hairline-divided spec-sheet strip (30 m / ±20 m / 10 min / 75%), paper auth card, fine-print footer.
+- Restyled teacher-dashboard: solid-paper sticky header, ink active course chips, hairline-divided stat cells with big serif numerals, ledger live check-in rows (divide-y), roster bars (leaf/clay), paper geofence dialog with dashed-fence preview.
+- Restyled student-dashboard: 3-cell spec strip, <75% inline clay warning line, underline tabs, session cards with serif titles + stamps, left-border result banners (leaf success / clay error / paper locating), date-grouped history ledgers with PRESENT stamps, restyled demo-GPS simulator list.
+- Fixed real bug found en route: <Toaster> was never mounted, so all toast() calls were silent — now mounted in layout.tsx (verified toasts render).
+- Dev server died mid-task; restarted in background logging to dev.log.
+- Verification: bun run lint clean; agent-browser E2E — landing renders zero console errors, teacher login → start-session dialog (prefilled coords) → LIVE session with countdown ring, student login → Demo GPS 45 m → clay "You are 45 m away" banner, Demo GPS 2 m → leaf "Present — Recorded 2.0 m" + toast + stats 100%, history ledger grouped by date with stamps, mobile 390 px landing + student layouts hold, CSV endpoint 401 unauth / 200 with BOM authed. Screenshots: scripts/preview-v2-*.png.
+
+Stage Summary:
+- Deliverable: same runnable Next.js 16 app at /home/z/my-project (port 3000), now in the "Academic Register" skin — no glassmorphism, no gradients, no glow; all attendance logic untouched.
+- Design tokens live in src/app/globals.css (--paper/--ink/--leaf/--clay/--ochre); components use semantic utility names (bg-card, border-line, text-leaf-deep...).
+- Bonus fix: Toaster mounted → toast feedback now actually visible.
+- All spec thresholds unchanged: 30 m geofence, ±20 m accuracy gate, 10-min sessions, 75% floor, dedup, CSV export.

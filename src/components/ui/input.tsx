@@ -6,8 +6,8 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
     <input
       type={type}
       className={cn(
-        "flex h-11 w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2 text-sm text-zinc-100 shadow-sm transition-colors",
-        "placeholder:text-zinc-500 hover:border-white/20 focus:border-emerald-400/60 focus:bg-white/8 focus:outline-none",
+        "flex h-10 w-full rounded-md border border-line-strong bg-card px-3 py-2 text-sm text-ink shadow-[0_1px_2px_rgba(29,26,22,0.04)] transition-colors",
+        "placeholder:text-faint hover:border-ink/35 focus:border-leaf focus:outline-none focus:ring-[3px] focus:ring-leaf/15",
         "disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}

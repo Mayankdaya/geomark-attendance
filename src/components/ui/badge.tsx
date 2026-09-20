@@ -2,16 +2,20 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
+/**
+ * Stamp-style badge — like a registrar's ink stamp.
+ * Small, rectangular, uppercase, letter-spaced.
+ */
 const badgeVariants = cva(
-  "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors",
+  "inline-flex items-center gap-1.5 rounded-[4px] border px-1.5 py-[3px] text-[10px] font-semibold uppercase leading-none tracking-[0.08em]",
   {
     variants: {
       variant: {
-        default: "border-emerald-400/25 bg-emerald-400/10 text-emerald-300",
-        secondary: "border-white/10 bg-white/6 text-zinc-300",
-        warning: "border-amber-400/25 bg-amber-400/10 text-amber-300",
-        danger: "border-rose-400/25 bg-rose-400/10 text-rose-300",
-        outline: "border-white/15 text-zinc-300",
+        default: "border-leaf/25 bg-leaf-tint text-leaf-deep",
+        secondary: "border-line bg-paper-deep text-muted",
+        warning: "border-ochre/30 bg-ochre-tint text-ochre",
+        danger: "border-clay/25 bg-clay-tint text-clay",
+        outline: "border-line-strong bg-card text-ink-soft",
       },
     },
     defaultVariants: { variant: "default" },

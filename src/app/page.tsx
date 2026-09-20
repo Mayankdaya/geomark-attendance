@@ -45,8 +45,8 @@ export default function Home() {
           <motion.div
             key="splash"
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.35 }}
-            className="fixed inset-0 z-50 grid place-items-center bg-[#06080b]"
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 grid place-items-center bg-paper"
           >
             <div className="flex flex-col items-center gap-5">
               <div className="radar h-16 w-16">
@@ -55,9 +55,7 @@ export default function Home() {
               <div className="relative z-10">
                 <Logo size="lg" withWordmark={false} />
               </div>
-              <p className="text-xs uppercase tracking-[0.3em] text-zinc-600">
-                Locating your session
-              </p>
+              <p className="eyebrow">Locating your session</p>
             </div>
           </motion.div>
         )}

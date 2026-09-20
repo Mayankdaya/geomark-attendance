@@ -4,27 +4,30 @@ import { cn } from "@/lib/utils";
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("glass rounded-2xl shadow-[0_20px_60px_-20px_rgba(0,0,0,0.7)]", className)}
+      className={cn(
+        "rounded-lg border border-line bg-card shadow-[0_1px_2px_rgba(29,26,22,0.04)]",
+        className,
+      )}
       {...props}
     />
   );
 }
 
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return <div className={cn("flex flex-col gap-1.5 p-5 sm:p-6", className)} {...props} />;
+  return <div className={cn("flex flex-col gap-1 p-5 sm:p-6", className)} {...props} />;
 }
 
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("font-display text-lg font-semibold tracking-tight text-zinc-50", className)}
+      className={cn("text-[15px] font-semibold tracking-tight text-ink", className)}
       {...props}
     />
   );
 }
 
 function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
-  return <div className={cn("text-sm text-zinc-400", className)} {...props} />;
+  return <div className={cn("text-[13px] leading-relaxed text-muted", className)} {...props} />;
 }
 
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {

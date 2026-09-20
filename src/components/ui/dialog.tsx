@@ -16,18 +16,18 @@ function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content>) {
   return (
     <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out" />
+      <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-ink/35 data-[state=open]:animate-in data-[state=closed]:animate-out" />
       <DialogPrimitive.Content
         className={cn(
           "fixed left-1/2 top-1/2 z-50 w-[calc(100vw-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2",
-          "glass rounded-2xl p-6 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.9)] focus:outline-none",
+          "rounded-lg border border-line bg-card p-6 shadow-[0_24px_56px_-16px_rgba(29,26,22,0.35)] focus:outline-none",
           className,
         )}
         {...props}
       >
         {children}
         <DialogPrimitive.Close
-          className="absolute right-4 top-4 rounded-lg p-1 text-zinc-400 transition-colors hover:bg-white/8 hover:text-zinc-100 cursor-pointer"
+          className="absolute right-4 top-4 rounded-md p-1 text-faint transition-colors hover:bg-paper-deep hover:text-ink cursor-pointer"
           aria-label="Close"
         >
           <X className="h-4 w-4" />
@@ -38,7 +38,7 @@ function DialogContent({
 }
 
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return <div className={cn("mb-4 flex flex-col gap-1.5", className)} {...props} />;
+  return <div className={cn("mb-5 flex flex-col gap-1", className)} {...props} />;
 }
 
 function DialogTitle({
@@ -47,7 +47,7 @@ function DialogTitle({
 }: React.ComponentProps<typeof DialogPrimitive.Title>) {
   return (
     <DialogPrimitive.Title
-      className={cn("font-display text-lg font-semibold text-zinc-50", className)}
+      className={cn("font-display text-[22px] leading-tight text-ink", className)}
       {...props}
     />
   );
@@ -59,7 +59,7 @@ function DialogDescription({
 }: React.ComponentProps<typeof DialogPrimitive.Description>) {
   return (
     <DialogPrimitive.Description
-      className={cn("text-sm text-zinc-400", className)}
+      className={cn("text-[13px] leading-relaxed text-muted", className)}
       {...props}
     />
   );

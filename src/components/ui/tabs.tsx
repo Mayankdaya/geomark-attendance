@@ -5,16 +5,14 @@ import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { cn } from "@/lib/utils";
 
 function Tabs({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Root>) {
-  return <TabsPrimitive.Root className={cn("flex flex-col gap-4", className)} {...props} />;
+  return <TabsPrimitive.Root className={cn("flex flex-col gap-5", className)} {...props} />;
 }
 
+/** Underline tabs — editorial hairline rule with an ink active rule. */
 function TabsList({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.List>) {
   return (
     <TabsPrimitive.List
-      className={cn(
-        "inline-flex h-11 items-center justify-center gap-1 rounded-xl border border-white/10 bg-white/4 p-1 text-zinc-400",
-        className,
-      )}
+      className={cn("flex w-full items-stretch gap-6 border-b border-line", className)}
       {...props}
     />
   );
@@ -24,9 +22,9 @@ function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPr
   return (
     <TabsPrimitive.Trigger
       className={cn(
-        "inline-flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3.5 py-1.5 text-sm font-semibold transition-all cursor-pointer",
-        "data-[state=active]:bg-white/10 data-[state=active]:text-zinc-50 data-[state=active]:shadow-sm",
-        "hover:text-zinc-200",
+        "relative -mb-px inline-flex flex-1 items-center justify-center gap-2 border-b-2 border-transparent pb-2.5 pt-1 text-sm font-medium text-muted transition-colors cursor-pointer",
+        "hover:text-ink data-[state=active]:border-ink data-[state=active]:text-ink",
+        "focus-visible:outline-none",
         className,
       )}
       {...props}

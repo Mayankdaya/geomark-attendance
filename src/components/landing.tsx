@@ -4,8 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import {
-  Radar, Timer, ShieldCheck, MapPin, GraduationCap, Users,
-  ArrowRight, Loader2, Sparkles, ScanLine, FileDown,
+  ArrowRight, Loader2, GraduationCap, Users, MapPin,
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -14,113 +13,127 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
 import { post } from "@/lib/client";
 import type { SafeUser } from "@/lib/auth";
 
+/** Numbered ledger rows instead of icon cards — feels like a spec sheet, not a template. */
 const FEATURES = [
   {
-    icon: Radar,
-    title: "30 m GPS geofence",
-    desc: "Haversine distance check pins students to the physical classroom — no drive-by check-ins.",
+    n: "01",
+    title: "A 30-meter geofence around the room",
+    desc: "Haversine distance is computed against the classroom's coordinates, so check-ins only count from inside the room — not the parking lot.",
   },
   {
-    icon: Timer,
-    title: "10-minute live sessions",
-    desc: "Every session self-destructs after ten minutes. Late? Marked absent. No exceptions.",
+    n: "02",
+    title: "Ten-minute sessions that close themselves",
+    desc: "The teacher opens a window; it shuts automatically when the timer runs out. Late means absent, without an argument.",
   },
   {
-    icon: ShieldCheck,
-    title: "Anti-proxy engine",
-    desc: "Rejects GPS fixes worse than ±20 m, stores the exact distance, and allows one check-in per student.",
+    n: "03",
+    title: "Every record keeps its evidence",
+    desc: "GPS fixes weaker than ±20 m are rejected outright, and each accepted mark stores the exact distance and timestamp it was taken.",
   },
 ];
 
 const PROOF = [
-  { icon: ScanLine, stat: "30 m", label: "geofence radius" },
-  { icon: MapPin, stat: "±20 m", label: "accuracy gate" },
-  { icon: Timer, stat: "10 min", label: "session window" },
-  { icon: FileDown, stat: "CSV", label: "one-click reports" },
+  { stat: "30 m", label: "geofence radius" },
+  { stat: "±20 m", label: "accuracy gate" },
+  { stat: "10 min", label: "session window" },
+  { stat: "75%", label: "attendance floor" },
 ];
 
 export function Landing({ onAuthed }: { onAuthed: (user: SafeUser) => void }) {
   return (
-    <main className="min-h-screen flex flex-col">
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
+    <main className="min-h-screen">
+      <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-5 py-6 sm:px-8">
         <Logo />
-        <Badge variant="secondary" className="hidden sm:inline-flex">
-          <Sparkles className="h-3 w-3" /> GPS-verified attendance
+        <Badge variant="outline" className="hidden sm:inline-flex">
+          <span className="live-dot" /> Live geofenced roll call
         </Badge>
       </header>
 
-      <div className="mx-auto grid w-full max-w-6xl flex-1 items-center gap-12 px-5 pb-16 pt-6 sm:px-8 lg:grid-cols-[1.1fr_minmax(400px,0.9fr)] lg:gap-16">
-        {/* ── Marketing column ── */}
+      <div className="mx-auto grid w-full max-w-5xl items-start gap-12 px-5 pb-20 pt-8 sm:px-8 lg:grid-cols-[1.1fr_minmax(380px,0.9fr)] lg:gap-16 lg:pt-14">
+        {/* ── Editorial column ── */}
         <motion.section
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          <Badge className="mb-5 px-3 py-1">
-            <span className="live-dot" /> Real-time geofenced roll call
-          </Badge>
-          <h1 className="font-display text-4xl font-bold leading-[1.08] tracking-tight text-zinc-50 sm:text-5xl lg:text-[3.4rem]">
-            Attendance that checks
+          <div className="flex items-center gap-3">
+            <span className="h-px w-8 bg-ink/40" />
+            <span className="eyebrow">GPS-verified attendance</span>
+          </div>
+
+          <h1 className="mt-5 font-display text-[2.6rem] leading-[1.06] tracking-[-0.01em] text-ink sm:text-6xl">
+            Roll call that knows
             <br />
-            <span className="text-gradient">where you actually are.</span>
+            where you <em className="italic">actually</em> are.
           </h1>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-zinc-400 sm:text-lg">
-            GeoMark replaces manual roll call with GPS proof. Teachers open a ten-minute
-            session; students can only sign in from inside the classroom&apos;s 30-meter
-            geofence. Everything updates live, and every record keeps its distance.
+
+          <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-ink-soft sm:text-base">
+            GeoMark replaces the clipboard with GPS proof. Teachers open a ten-minute
+            session from the front of the room; students can only sign in from inside
+            its 30-meter geofence. Attendance updates live, and every record carries
+            the distance it was marked from.
           </p>
 
-          <div className="mt-8 space-y-4">
+          <ol className="mt-10 divide-y divide-line border-y border-line">
             {FEATURES.map((f, i) => (
-              <motion.div
-                key={f.title}
-                initial={{ opacity: 0, x: -18 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.15 + i * 0.12, duration: 0.5 }}
-                className="flex gap-4"
+              <motion.li
+                key={f.n}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.12 + i * 0.1, duration: 0.45 }}
+                className="flex gap-5 py-4"
               >
-                <div className="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-emerald-400/20 bg-emerald-400/10 text-emerald-300">
-                  <f.icon className="h-5 w-5" />
-                </div>
+                <span className="pt-1 font-mono text-xs text-faint">{f.n}</span>
                 <div>
-                  <div className="font-semibold text-zinc-100">{f.title}</div>
-                  <div className="text-sm leading-relaxed text-zinc-400">{f.desc}</div>
+                  <div className="text-[15px] font-medium text-ink">{f.title}</div>
+                  <p className="mt-1 text-sm leading-relaxed text-muted">{f.desc}</p>
                 </div>
-              </motion.div>
+              </motion.li>
             ))}
-          </div>
+          </ol>
 
-          <div className="mt-10 grid max-w-lg grid-cols-2 gap-3 sm:grid-cols-4">
+          {/* Spec-sheet strip — hairline-divided cells, mono figures */}
+          <dl className="mt-8 grid grid-cols-2 overflow-hidden rounded-lg border border-line bg-card sm:grid-cols-4 sm:divide-x divide-line">
             {PROOF.map((p) => (
-              <div key={p.label} className="glass glass-hover rounded-xl px-4 py-3">
-                <p.icon className="mb-1.5 h-4 w-4 text-emerald-300/80" />
-                <div className="font-display text-lg font-bold text-zinc-50">{p.stat}</div>
-                <div className="text-[11px] text-zinc-500">{p.label}</div>
+              <div key={p.label} className="px-4 py-3.5">
+                <dd className="font-mono text-[15px] text-ink">{p.stat}</dd>
+                <dt className="mt-1 text-[11px] uppercase tracking-[0.1em] text-faint">
+                  {p.label}
+                </dt>
               </div>
             ))}
-          </div>
+          </dl>
         </motion.section>
 
         {/* ── Auth card ── */}
         <motion.section
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
+          transition={{ delay: 0.1, duration: 0.5, ease: "easeOut" }}
         >
-          <Card className="mx-auto w-full max-w-md">
+          <Card className="mx-auto w-full max-w-md shadow-[0_16px_40px_-20px_rgba(29,26,22,0.25)]">
             <CardContent className="p-6 sm:p-7">
               <AuthCard onAuthed={onAuthed} />
             </CardContent>
           </Card>
+
+          <p className="mx-auto mt-4 flex max-w-md items-center justify-center gap-1.5 text-center text-xs text-faint">
+            <MapPin className="h-3 w-3" />
+            Works on any phone with location services — nothing to install.
+          </p>
         </motion.section>
       </div>
 
-      <footer className="pb-6 text-center text-xs text-zinc-600">
-        GeoMark · Haversine-verified presence · Built for modern classrooms
+      <footer className="border-t border-line">
+        <div className="mx-auto flex w-full max-w-5xl flex-col items-center justify-between gap-2 px-5 py-5 text-xs text-faint sm:flex-row sm:px-8">
+          <span>
+            GeoMark <span className="mx-1 text-line-strong">·</span> Haversine-verified presence
+          </span>
+          <span>Built for classrooms that take attendance seriously.</span>
+        </div>
       </footer>
     </main>
   );
@@ -131,7 +144,7 @@ export function Landing({ onAuthed }: { onAuthed: (user: SafeUser) => void }) {
 function AuthCard({ onAuthed }: { onAuthed: (user: SafeUser) => void }) {
   return (
     <Tabs defaultValue="login">
-      <TabsList className="w-full">
+      <TabsList>
         <TabsTrigger value="login">Sign in</TabsTrigger>
         <TabsTrigger value="register">Create account</TabsTrigger>
       </TabsList>
@@ -172,7 +185,7 @@ function LoginForm({ onAuthed }: { onAuthed: (user: SafeUser) => void }) {
   };
 
   return (
-    <form onSubmit={submit} className="mt-5 space-y-4">
+    <form onSubmit={submit} className="mt-6 space-y-4">
       <div className="space-y-1.5">
         <Label htmlFor="email">Email</Label>
         <Input
@@ -202,21 +215,22 @@ function LoginForm({ onAuthed }: { onAuthed: (user: SafeUser) => void }) {
         {busy ? "Signing in…" : "Sign in"}
       </Button>
 
-      <Separator className="my-5" />
-      <p className="text-center text-[11px] uppercase tracking-widest text-zinc-500">
-        Try the demo
-      </p>
-      <div className="grid grid-cols-2 gap-2.5">
-        <Button type="button" variant="secondary" size="sm" onClick={() => fillDemo("TEACHER")}>
-          <Users className="h-3.5 w-3.5" /> Teacher
-        </Button>
-        <Button type="button" variant="secondary" size="sm" onClick={() => fillDemo("STUDENT")}>
-          <GraduationCap className="h-3.5 w-3.5" /> Student
-        </Button>
+      <div className="pt-4">
+        <p className="eyebrow text-center">Try the demo</p>
+        <div className="mt-3 grid grid-cols-2 gap-2.5">
+          <Button type="button" variant="secondary" size="sm" onClick={() => fillDemo("TEACHER")}>
+            <Users className="h-3.5 w-3.5" /> Teacher
+          </Button>
+          <Button type="button" variant="secondary" size="sm" onClick={() => fillDemo("STUDENT")}>
+            <GraduationCap className="h-3.5 w-3.5" /> Student
+          </Button>
+        </div>
+        <p className="mt-3 text-center text-xs leading-relaxed text-faint">
+          sarah@campus.edu / teacher123
+          <br />
+          alex@campus.edu / student123
+        </p>
       </div>
-      <p className="text-center text-xs text-zinc-600">
-        teacher123 / student123 — prefilled from seeded campus data
-      </p>
     </form>
   );
 }
@@ -245,23 +259,26 @@ function RegisterForm({ onAuthed }: { onAuthed: (user: SafeUser) => void }) {
   };
 
   return (
-    <form onSubmit={submit} className="mt-5 space-y-4">
-      <div className="grid grid-cols-2 gap-2.5">
-        {(["STUDENT", "TEACHER"] as const).map((r) => (
-          <button
-            key={r}
-            type="button"
-            onClick={() => setRole(r)}
-            className={`flex items-center justify-center gap-2 rounded-xl border px-3 py-3 text-sm font-semibold transition-all cursor-pointer ${
-              role === r
-                ? "border-emerald-400/60 bg-emerald-400/12 text-emerald-200 shadow-[0_0_24px_-6px_rgba(16,185,129,0.5)]"
-                : "border-white/10 bg-white/4 text-zinc-400 hover:border-white/20 hover:text-zinc-200"
-            }`}
-          >
-            {r === "STUDENT" ? <GraduationCap className="h-4 w-4" /> : <Users className="h-4 w-4" />}
-            {r === "STUDENT" ? "Student" : "Teacher"}
-          </button>
-        ))}
+    <form onSubmit={submit} className="mt-6 space-y-4">
+      <div className="space-y-1.5">
+        <Label>I am a</Label>
+        <div className="grid grid-cols-2 gap-2.5">
+          {(["STUDENT", "TEACHER"] as const).map((r) => (
+            <button
+              key={r}
+              type="button"
+              onClick={() => setRole(r)}
+              className={`flex items-center justify-center gap-2 rounded-md border px-3 py-2.5 text-sm font-medium transition-colors cursor-pointer ${
+                role === r
+                  ? "border-ink bg-ink text-paper"
+                  : "border-line-strong bg-card text-ink-soft hover:border-ink/45 hover:text-ink"
+              }`}
+            >
+              {r === "STUDENT" ? <GraduationCap className="h-4 w-4" /> : <Users className="h-4 w-4" />}
+              {r === "STUDENT" ? "Student" : "Teacher"}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="name">Full name</Label>
@@ -276,7 +293,7 @@ function RegisterForm({ onAuthed }: { onAuthed: (user: SafeUser) => void }) {
         <Input id="rpassword" type="password" placeholder="Min. 6 characters" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} autoComplete="new-password" />
       </div>
       <Button type="submit" size="lg" className="w-full" disabled={busy}>
-        {busy ? <Loader2 className="animate-spin" /> : <Sparkles />}
+        {busy ? <Loader2 className="animate-spin" /> : <ArrowRight />}
         {busy ? "Creating…" : `Create ${role === "STUDENT" ? "student" : "teacher"} account`}
       </Button>
     </form>
