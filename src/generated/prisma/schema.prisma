@@ -1,0 +1,93 @@
+// ─────────────────────────────────────────────────────────────
+// GPS Smart Attendance System — Prisma schema
+// Mirrors the original Firestore collections:
+//   users      → User      { uid, name, email, role }
+//   courses    → Course    { courseId, name, teacherId }
+//   sessions   → Session   { sessionId, courseId, status, startTime, endTime, lat, lng, radius }
+//   attendance → Attendance{ sessionId, studentId, name, timestamp, distance, status }
+// plus Enrollment (student ↔ course) and AuthSession (cookie sessions).
+// ─────────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../db/attendance.db"
+}
+
+model User {
+  id          String        @id @default(cuid()) // uid
+  name        String
+  email       String        @unique
+  password    String // scrypt hash (salt:hash)
+  role        String // "TEACHER" | "STUDENT"
+  createdAt   DateTime      @default(now())
+  courses     Course[] // courses this user teaches
+  records     Attendance[] // attendance rows as a student
+  enrollments Enrollment[] // courses this student is enrolled in
+  authTokens  AuthSession[]
+}
+
+model AuthSession {
+  token     String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Course {
+  id          String       @id @default(cuid()) // courseId
+  name        String
+  code        String       @unique // e.g. "CS-101"
+  teacherId   String
+  teacher     User         @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  sessions    Session[]
+  enrollments Enrollment[]
+  createdAt   DateTime     @default(now())
+}
+
+model Enrollment {
+  id        String @id @default(cuid())
+  courseId  String
+  studentId String
+  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, studentId])
+}
+
+model Session {
+  id         String       @id @default(cuid()) // sessionId
+  courseId   String
+  course     Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  status     String       @default("ACTIVE") // "ACTIVE" | "ENDED"
+  startTime  DateTime     @default(now())
+  endTime    DateTime // startTime + 10 min — server enforces expiry
+  lat        Float // classroom geofence center
+  lng        Float
+  radius     Float        @default(30) // meters, acceptance geofence
+  attendance Attendance[]
+  createdAt  DateTime     @default(now())
+
+  @@index([courseId, status])
+}
+
+model Attendance {
+  id        String   @id @default(cuid())
+  sessionId String
+  studentId String
+  name      String // denormalized for fast render + CSV
+  timestamp DateTime @default(now())
+  distance  Float // Haversine distance from classroom (meters)
+  accuracy  Float // GPS accuracy reported by device (meters)
+  status    String   @default("PRESENT")
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  student   User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, studentId]) // anti-proxy: one mark per student per session
+  @@index([studentId])
+}
