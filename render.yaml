@@ -1,18 +1,21 @@
-# Render Blueprint — deploys this app + a persistent disk for the SQLite DB.
-# NOTE: persistent disks require a paid Render instance type (Starter or up).
-# Free instances have an ephemeral filesystem, so attendance data would be
-# lost on every restart — do not use `plan: free` with this SQLite app.
+# Render Blueprint — FREE tier deployment.
+# Free limits (see https://render.com/docs/free): service sleeps after 15 min
+# without traffic (~1 min to wake), 750 hrs/month, and the filesystem is
+# EPHEMERAL — no persistent disk allowed on free plans. The container
+# entrypoint re-creates + re-seeds the demo database on every (re)start, so
+# the app always works, but data you create is lost on restart.
+# For durable data, switch `plan: free` → `plan: starter` and add:
+#     disk:
+#       name: attendancedb
+#       mountPath: /app/db
+#       sizeGB: 1
 services:
   - type: web
     name: geomark-attendance
     runtime: docker
     dockerfilePath: ./Dockerfile
-    plan: starter
+    plan: free
     healthCheckPath: /api/auth/me
-    disk:
-      name: attendancedb
-      mountPath: /app/db
-      sizeGB: 1
     envVars:
       - key: NODE_ENV
         value: production
