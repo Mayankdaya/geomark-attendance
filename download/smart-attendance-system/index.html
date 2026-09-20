@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ============================================================
+       LANDING PAGE — index.html
+       Public marketing page: explains the system and routes users
+       to login / sign-up. Redirects signed-in users automatically.
+       ============================================================ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Attendance — GPS-verified in one tap</title>
+  <meta name="description" content="GPS-verified student attendance. Teachers start a 10-minute session, students mark present only within 30 metres of the classroom." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%3E%3Cpath%20fill='%234f46e5'%20d='M8%200a5%205%200%200%200-5%205c0%203.5%205%2011%205%2011s5-7.5%205-11a5%205%200%200%200-5-5zm0%207a2%202%200%201%201%200-4%202%202%200%200%201%200%204z'/%3E%3C/svg%3E" />
+
+  <!-- Bootstrap 5 + Icons + Inter font (all CDN — no build step) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet" />
+</head>
+
+<body class="app-bg">
+
+  <!-- ============ NAVBAR ============ -->
+  <nav class="navbar navbar-expand-md bg-white shadow-sm sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">
+        <i class="bi bi-geo-alt-fill brand-ico"></i> Smart Attendance
+      </a>
+      <div class="ms-auto d-flex gap-2">
+        <a href="login.html" class="btn btn-outline-primary btn-sm px-3">Login</a>
+        <a href="login.html?mode=register" class="btn btn-primary btn-sm px-3">Sign up</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <div class="container py-5">
+      <div class="row align-items-center g-5 py-lg-4">
+
+        <div class="col-lg-7">
+          <span class="chip">
+            <i class="bi bi-shield-check"></i> GPS-verified &middot; anti-proxy
+          </span>
+          <h1 class="display-5 fw-800 mt-3">
+            Attendance that can't be marked from bed.
+          </h1>
+          <p class="lead text-white-50">
+            Teachers start a 10-minute session from inside the classroom.
+            Students can mark present only when their phone's GPS places them
+            within 30 metres — verified with the Haversine formula and logged
+            to Firestore in real time.
+          </p>
+          <div class="d-flex flex-wrap gap-2 mt-4">
+            <a href="login.html?mode=register&amp;role=teacher" class="btn btn-light btn-lg px-4">
+              <i class="bi bi-person-video3 me-1"></i> I'm a Teacher
+            </a>
+            <a href="login.html?mode=register&amp;role=student" class="btn btn-outline-light btn-lg px-4">
+              <i class="bi bi-mortarboard me-1"></i> I'm a Student
+            </a>
+          </div>
+        </div>
+
+        <!-- decorative mock of the student card -->
+        <div class="col-lg-5 d-none d-lg-block">
+          <div class="mock-card mx-auto">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <strong>Mobile Computing</strong>
+              <span class="badge rounded-pill text-bg-danger"><span class="live-dot"></span>LIVE</span>
+            </div>
+            <div class="text-secondary small mb-2">Dr. Rao &middot; started 09:02</div>
+            <div class="mock-row"><span>Ends in</span><span class="mono fw-bold">07:42</span></div>
+            <div class="mock-row"><span>Your distance</span><span class="mono fw-bold text-success">12 m</span></div>
+            <div class="feedback ok">✅ Present! You are 12 m from the classroom.</div>
+            <button class="btn btn-primary w-100" type="button" disabled>
+              <i class="bi bi-geo-alt-fill"></i> Mark Attendance
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <main class="container py-5">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card app-card h-100">
+          <div class="card-body p-4">
+            <div class="stat-ico brand mb-3"><i class="bi bi-1-circle fs-5"></i></div>
+            <h2 class="h6 fw-bold">Teacher starts a session</h2>
+            <p class="text-secondary small mb-0">
+              One tap anchors the classroom at the teacher's current GPS
+              position and opens a 30 m geofence for exactly 10 minutes.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card app-card h-100">
+          <div class="card-body p-4">
+            <div class="stat-ico ok mb-3"><i class="bi bi-2-circle fs-5"></i></div>
+            <h2 class="h6 fw-bold">Students mark inside the fence</h2>
+            <p class="text-secondary small mb-0">
+              The browser fetches a GPS fix (must be accurate to 20 m),
+              Haversine-checks the distance, and marks Present — once only.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card app-card h-100">
+          <div class="card-body p-4">
+            <div class="stat-ico warn mb-3"><i class="bi bi-3-circle fs-5"></i></div>
+            <h2 class="h6 fw-bold">Live list + CSV reports</h2>
+            <p class="text-secondary small mb-0">
+              The teacher watches marks arrive in real time, tracks each
+              student's attendance %, and exports CSV reports.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- anti-proxy feature chips -->
+    <div class="d-flex flex-wrap justify-content-center gap-2 mt-5">
+      <span class="feature-chip"><i class="bi bi-stopwatch"></i> 10-min auto expiry</span>
+      <span class="feature-chip"><i class="bi bi-broadcast-pin"></i> 30 m geofence</span>
+      <span class="feature-chip"><i class="bi bi-rulers"></i> 20 m accuracy gate</span>
+      <span class="feature-chip"><i class="bi bi-person-check"></i> One mark per session</span>
+      <span class="feature-chip"><i class="bi bi-clock-history"></i> Timestamp + distance logged</span>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="app-footer py-4 text-center">
+    Smart Attendance &middot; HTML + Bootstrap + Firebase &middot; deployable on Firebase Hosting
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="js/landing.js"></script>
+</body>
+</html>

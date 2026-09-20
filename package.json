@@ -1,0 +1,8 @@
+{
+  "name": "smart-attendance-preview",
+  "private": true,
+  "description": "Static preview server for the GPS Smart Attendance System (source project lives in download/smart-attendance-system/)",
+  "scripts": {
+    "dev": "node server.js"
+  }
+}

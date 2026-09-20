@@ -1,0 +1,110 @@
+rules_version = '2';
+
+// ==========================================================================
+// FIRESTORE SECURITY RULES — firestore.rules
+// --------------------------------------------------------------------------
+// Deploy with:  firebase deploy --only firestore:rules
+//
+// Model:
+//   users/{uid}            -> { uid, name, email, role: "teacher"|"student" }
+//   courses/{courseId}     -> { name, teacherId, teacherName, createdAt }
+//   sessions/{sessionId}   -> { courseId, status, startTime, endTime,
+//                               lat, lng, radius, ... }
+//   attendance/{sessionId_studentId}
+//                          -> { sessionId, studentId, name, timestamp,
+//                               distance, status }
+//
+// Anti-proxy notes:
+//   - Students may only CREATE attendance docs for themselves, and only
+//     with status="Present" — they can never edit or delete entries.
+//   - The 30 m distance check cannot be expressed in rules (no geo math),
+//     so it is enforced in the client + hardened server-side via Cloud
+//     Functions if you need bullet-proof validation (see README).
+// ==========================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* ------------------------- helper functions ------------------------ */
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Reads the caller's role from their profile doc (1 cached read/call).
+    function userRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isTeacher() {
+      return signedIn() && userRole() == 'teacher';
+    }
+
+    function isStudent() {
+      return signedIn() && userRole() == 'student';
+    }
+
+    /* ----------------------------- users ------------------------------- */
+    match /users/{uid} {
+      // You can read only your own profile (page guards rely on this).
+      allow read: if signedIn() && request.auth.uid == uid;
+
+      // You can create only your own profile at registration time,
+      // and the role must be one of the two allowed values.
+      allow create: if signedIn()
+                    && request.auth.uid == uid
+                    && request.resource.data.role in ['teacher', 'student'];
+
+      // Profiles are immutable through the client (update via console/admin).
+      allow update, delete: if false;
+    }
+
+    /* ---------------------------- courses ------------------------------ */
+    match /courses/{courseId} {
+      // Any signed-in user can browse course names (students need them).
+      allow read: if signedIn();
+
+      // Only teachers may create courses, and only under their own id.
+      allow create: if isTeacher()
+                    && request.resource.data.teacherId == request.auth.uid;
+
+      // Only the owning teacher may modify / remove their courses.
+      allow update, delete: if isTeacher()
+                    && resource.data.teacherId == request.auth.uid;
+    }
+
+    /* ---------------------------- sessions ----------------------------- */
+    match /sessions/{sessionId} {
+      // Students must be able to list active sessions and read anchors.
+      allow read: if signedIn();
+
+      // Only teachers may open sessions, anchored to their own id.
+      allow create: if isTeacher()
+                    && request.resource.data.teacherId == request.auth.uid;
+
+      // Only the owning teacher may close/expire a session.
+      allow update: if isTeacher()
+                    && resource.data.teacherId == request.auth.uid;
+
+      // Session history is the attendance record — never delete it.
+      allow delete: if false;
+    }
+
+    /* --------------------------- attendance ---------------------------- */
+    match /attendance/{entryId} {
+      // Teachers can read any feed; students only their own history.
+      allow read: if signedIn()
+                  && (isTeacher() || resource.data.studentId == request.auth.uid);
+
+      // Students can only CREATE their own "Present" entry, once per
+      // session (doc id = sessionId_studentId makes duplicates impossible).
+      allow create: if isStudent()
+                    && request.resource.data.studentId == request.auth.uid
+                    && request.resource.data.status == 'Present'
+                    && request.resource.data.distance is number
+                    && request.resource.data.distance >= 0;
+
+      // Attendance is append-only — nobody edits or deletes marks.
+      allow update, delete: if false;
+    }
+  }
+}

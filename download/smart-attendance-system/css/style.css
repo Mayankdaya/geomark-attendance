@@ -1,0 +1,232 @@
+/* ==========================================================================
+   SMART ATTENDANCE SYSTEM — css/style.css
+   --------------------------------------------------------------------------
+   Custom styles layered on top of Bootstrap 5.3 (mobile-first).
+
+     Palette   : indigo brand (#4f46e5) + emerald success (#16a34a)
+                 + red failure (#dc2626) on a cool slate background
+     Typeface  : Inter (Google Fonts) with system-ui fallback
+     Cards     : borderless, 1rem radius, soft ambient shadow
+     Feedback  : .feedback.ok / .bad / .warn — green/red/amber result boxes
+   ========================================================================== */
+
+/* ----------------------------- design tokens --------------------------- */
+:root {
+  --brand:      #4f46e5;
+  --brand-dark: #4338ca;
+  --violet:     #7c3aed;
+  --ok:         #16a34a;
+  --bad:        #dc2626;
+  --warn:       #d97706;
+  --ink:        #0f172a;
+  --muted:      #64748b;
+  --line:       #e2e8f0;
+  --bg:         #f1f5f9;
+}
+
+* { -webkit-tap-highlight-color: transparent; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;     /* lets <footer> stick to the bottom */
+  min-height: 100vh;
+}
+
+main { flex: 1 0 auto; }      /* push footer down on short pages */
+
+/* Subtle dual-glow gradient background */
+.app-bg {
+  background:
+    radial-gradient(900px 480px at 110% -10%, rgba(79, 70, 229, .09), transparent 60%),
+    radial-gradient(760px 420px at -10% 110%, rgba(22, 163, 74, .08), transparent 60%),
+    var(--bg);
+}
+
+/* Monospace numerals for countdowns / distances */
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------- cards --------------------------------- */
+.app-card {
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, .06);
+}
+
+/* Dashboard stat cards */
+.stat-card .stat-value {
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+.stat-card .stat-label {
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.stat-ico {
+  width: 34px; height: 34px;
+  border-radius: .65rem;
+  display: grid; place-items: center;
+  font-size: 1rem;
+  margin-bottom: .55rem;
+}
+.stat-ico.brand { background: rgba(79, 70, 229, .12);  color: var(--brand); }
+.stat-ico.ok    { background: rgba(22, 163, 74, .12);  color: var(--ok); }
+.stat-ico.bad   { background: rgba(220, 38, 38, .12);  color: var(--bad); }
+.stat-ico.warn  { background: rgba(217, 119, 6, .12);  color: var(--warn); }
+
+/* ------------------------------- brand --------------------------------- */
+.brand-ico { color: var(--brand); }
+
+.brand-badge {
+  width: 56px; height: 56px;
+  border-radius: 1rem;
+  display: grid; place-items: center;
+  font-size: 1.6rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--brand), var(--violet));
+  box-shadow: 0 10px 24px rgba(79, 70, 229, .35);
+}
+
+.role-badge {
+  background: rgba(79, 70, 229, .1);
+  color: var(--brand);
+  font-weight: 600;
+}
+
+/* --------------------------- landing page hero ------------------------- */
+.hero {
+  background: linear-gradient(135deg, #4338ca 0%, #4f46e5 45%, #7c3aed 100%);
+  color: #fff;
+}
+.hero .chip {
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .35rem .85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .14);
+  border: 1px solid rgba(255, 255, 255, .18);
+  font-size: .8rem;
+  font-weight: 600;
+}
+.fw-800 { font-weight: 800; }
+.hero .text-white-50 { color: rgba(255, 255, 255, .72) !important; }
+
+/* decorative "phone" card shown in the hero */
+.mock-card {
+  width: min(320px, 100%);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 1.25rem;
+  padding: 1.1rem;
+  box-shadow: 0 24px 60px rgba(2, 6, 23, .35);
+  transform: rotate(2deg);
+}
+.mock-card .mock-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .55rem 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: .85rem;
+}
+.mock-card .mock-row:last-child { border-bottom: 0; }
+
+/* feature chips row under the steps */
+.feature-chip {
+  display: inline-flex; align-items: center; gap: .45rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .45rem .9rem;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, .05);
+}
+.feature-chip i { color: var(--brand); }
+
+/* ------------------------------ feedback ------------------------------- */
+/* Green / red / amber result boxes used across both dashboards            */
+.feedback {
+  border-radius: .65rem;
+  padding: .55rem .7rem;
+  font-size: .85rem;
+  font-weight: 600;
+  margin-bottom: .6rem;
+  animation: pop .18s ease-out;
+}
+.feedback.ok {
+  background: rgba(22, 163, 74, .12);
+  color: #15803d;
+  border: 1px solid rgba(22, 163, 74, .35);
+}
+.feedback.bad {
+  background: rgba(220, 38, 38, .10);
+  color: #b91c1c;
+  border: 1px solid rgba(220, 38, 38, .30);
+}
+.feedback.warn {
+  background: rgba(217, 119, 6, .12);
+  color: #b45309;
+  border: 1px solid rgba(217, 119, 6, .35);
+}
+@keyframes pop {
+  from { transform: scale(.97); opacity: .4; }
+  to   { transform: scale(1);   opacity: 1;  }
+}
+
+/* pulsing white dot inside the red LIVE badge */
+.live-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  display: inline-block;
+  margin-right: .35rem;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .3; }
+}
+
+/* --------------------------- misc components --------------------------- */
+/* course pills on the teacher dashboard */
+.course-chip {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: .7rem;
+  padding: .55rem .75rem;
+  font-size: .9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  height: 100%;
+}
+
+/* tables: keep row text vertically centred + compact on phones */
+.table > :not(caption) > * > * { padding: .65rem .5rem; }
+.table td, .table th { vertical-align: middle; }
+
+/* history list items: allow long course names to truncate cleanly */
+.min-w-0 { min-width: 0; }
+
+/* nav pills: equal width on mobile */
+.nav-pills .nav-link { border-radius: .65rem; font-weight: 600; }
+
+/* footer */
+.app-footer { color: var(--muted); font-size: .82rem; }
+
+/* --------------------------- ≥ md enhancements -------------------------- */
+@media (min-width: 768px) {
+  .stat-card .stat-value { font-size: 1.9rem; }
+  .table > :not(caption) > * > * { padding: .75rem; }
+}
