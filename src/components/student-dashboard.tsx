@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import {
   LogOut, MapPin, CheckCircle2, XCircle, Timer,
-  Loader2, FlaskConical, UserPlus, KeyRound, Check, GraduationCap,
+  Loader2, FlaskConical, UserPlus, KeyRound, Check, GraduationCap, Database,
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { CountdownRing } from "@/components/countdown-ring";
@@ -37,7 +37,15 @@ const SIM_LABELS: Record<SimMode, { label: string; hint: string }> = {
   far: { label: "Outside the building", hint: "~45 m — out of range" },
 };
 
-export function StudentDashboard({ user, onLogout }: { user: SafeUser; onLogout: () => void }) {
+export function StudentDashboard({
+  user,
+  onLogout,
+  onOpenDatabase,
+}: {
+  user: SafeUser;
+  onLogout: () => void;
+  onOpenDatabase: () => void;
+}) {
   const [sessions, setSessions] = useState<ActiveSessionDTO[] | null>(null);
   const [courses, setCourses] = useState<CourseDTO[] | null>(null);
   const [history, setHistory] = useState<HistoryRow[] | null>(null);
@@ -167,6 +175,10 @@ export function StudentDashboard({ user, onLogout }: { user: SafeUser; onLogout:
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <Logo size="sm" />
           <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" onClick={onOpenDatabase} className="gap-2 px-2" title="Inspect the live database">
+              <Database className="h-4 w-4 text-faint" />
+              <span className="hidden text-sm sm:inline">Database</span>
+            </Button>
             <Badge variant="outline" className="hidden sm:inline-flex">
               <GraduationCap className="h-3 w-3" /> Student
             </Badge>

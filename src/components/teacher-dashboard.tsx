@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import {
   Play, Square, Plus, Download, MapPin, Crosshair, Loader2,
-  Users, LogOut, Radio,
+  Users, LogOut, Radio, Database,
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { CountdownRing } from "@/components/countdown-ring";
@@ -38,9 +38,11 @@ type SessionDetail = {
 export function TeacherDashboard({
   user,
   onLogout,
+  onOpenDatabase,
 }: {
   user: SafeUser;
   onLogout: () => void;
+  onOpenDatabase: () => void;
 }) {
   const [courses, setCourses] = useState<CourseDTO[] | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -117,6 +119,9 @@ export function TeacherDashboard({
           <div className="flex items-center gap-2">
             <Button variant="secondary" size="sm" onClick={() => setCreateOpen(true)}>
               <Plus className="h-3.5 w-3.5" /> <span className="hidden sm:inline">New course</span>
+            </Button>
+            <Button variant="secondary" size="sm" onClick={onOpenDatabase} title="Inspect the live database">
+              <Database className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Database</span>
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

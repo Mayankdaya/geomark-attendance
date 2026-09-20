@@ -6,13 +6,15 @@ import { Logo } from "@/components/logo";
 import { Landing } from "@/components/landing";
 import { TeacherDashboard } from "@/components/teacher-dashboard";
 import { StudentDashboard } from "@/components/student-dashboard";
+import { DatabaseView } from "@/components/database-view";
 import { api } from "@/lib/client";
 import type { SafeUser } from "@/lib/auth";
 
-type View = "loading" | "guest" | "teacher" | "student";
+type View = "loading" | "guest" | "teacher" | "student" | "database";
 
 export default function Home() {
   const [view, setView] = useState<View>("loading");
+  const [returnView, setReturnView] = useState<Exclude<View, "database">>("guest");
   const [user, setUser] = useState<SafeUser | null>(null);
 
   useEffect(() => {
@@ -36,6 +38,13 @@ export default function Home() {
     setUser(null);
     setView("guest");
   };
+
+  // Jump to the database inspector from any view, remembering where to return.
+  const openDatabase = () => {
+    if (view !== "database") setReturnView(view === "loading" ? "guest" : view);
+    setView("database");
+  };
+  const backFromDatabase = () => setView(returnView);
 
   return (
     <>
@@ -61,7 +70,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {view === "guest" && <Landing onAuthed={handleAuthed} />}
+      {view === "guest" && <Landing onAuthed={handleAuthed} onOpenDatabase={openDatabase} />}
       {view === "teacher" && user && (
         <motion.div
           key="teacher"
@@ -69,7 +78,7 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <TeacherDashboard user={user} onLogout={handleLogout} />
+          <TeacherDashboard user={user} onLogout={handleLogout} onOpenDatabase={openDatabase} />
         </motion.div>
       )}
       {view === "student" && user && (
@@ -79,7 +88,17 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <StudentDashboard user={user} onLogout={handleLogout} />
+          <StudentDashboard user={user} onLogout={handleLogout} onOpenDatabase={openDatabase} />
+        </motion.div>
+      )}
+      {view === "database" && (
+        <motion.div
+          key="database"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <DatabaseView onBack={backFromDatabase} />
         </motion.div>
       )}
     </>

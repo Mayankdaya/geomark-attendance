@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import {
-  ArrowRight, Loader2, GraduationCap, Users, MapPin,
+  ArrowRight, Loader2, GraduationCap, Users, MapPin, Database,
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -42,7 +42,13 @@ const PROOF = [
   { stat: "75%", label: "attendance floor" },
 ];
 
-export function Landing({ onAuthed }: { onAuthed: (user: SafeUser) => void }) {
+export function Landing({
+  onAuthed,
+  onOpenDatabase,
+}: {
+  onAuthed: (user: SafeUser) => void;
+  onOpenDatabase: () => void;
+}) {
   return (
     <main className="min-h-screen">
       <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-5 py-6 sm:px-8">
@@ -132,7 +138,14 @@ export function Landing({ onAuthed }: { onAuthed: (user: SafeUser) => void }) {
           <span>
             GeoMark <span className="mx-1 text-line-strong">·</span> Haversine-verified presence
           </span>
-          <span>Built for classrooms that take attendance seriously.</span>
+          <button
+            type="button"
+            onClick={onOpenDatabase}
+            className="inline-flex cursor-pointer items-center gap-1.5 text-ink-soft transition-colors hover:text-ink"
+          >
+            <Database className="h-3.5 w-3.5" />
+            Inspect the live database
+          </button>
         </div>
       </footer>
     </main>
