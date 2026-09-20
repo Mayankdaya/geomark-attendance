@@ -168,7 +168,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/z/my-project/src/generated/prisma",
+      "value": "C:\\Users\\abhim\\smart-attendance-next\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -177,16 +177,16 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "debian-openssl-3.0.x",
+        "value": "windows",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/z/my-project/prisma/schema.prisma",
+    "sourceFilePath": "C:\\Users\\abhim\\smart-attendance-next\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../../../prisma",
@@ -196,6 +196,7 @@ const config = {
     "db"
   ],
   "activeProvider": "sqlite",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {

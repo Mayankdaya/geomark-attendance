@@ -69,8 +69,8 @@ function Th({ children, className }: { children: React.ReactNode; className?: st
     <th className={cn("eyebrow px-4 py-2.5 text-left font-normal", className)}>{children}</th>
   );
 }
-function Td({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <td className={cn("px-4 py-2.5 align-middle", className)}>{children}</td>;
+function Td({ children, className, title }: { children: React.ReactNode; className?: string; title?: string }) {
+  return <td className={cn("px-4 py-2.5 align-middle", className)} title={title}>{children}</td>;
 }
 
 /** Shared ledger table shell — hairline ruled, mono numerals. */

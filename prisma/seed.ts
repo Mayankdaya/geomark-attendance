@@ -1,7 +1,7 @@
 // Seed script — run: bun run db:seed
 // Creates demo teacher, students, courses, historical sessions & attendance
 // so dashboards, percentages and CSV exports have meaningful data.
-import { PrismaClient } from "../src/generated/prisma";
+import { PrismaClient } from "../src/generated/prisma/index.js";
 import { randomBytes, scryptSync } from "crypto";
 
 const db = new PrismaClient();

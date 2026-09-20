@@ -40,7 +40,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
-      <body>
+      <body suppressHydrationWarning>
         {children}
         <Toaster />
       </body>
