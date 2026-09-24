@@ -3,3 +3,8 @@ node_modules/
 .next/
 *.log
 .vercel
+.env*
+!.env.example
+db/*.db*
+db/*.db-journal
+src/generated/

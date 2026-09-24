@@ -14,8 +14,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:../db/attendance.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {

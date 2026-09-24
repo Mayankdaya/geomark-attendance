@@ -52,8 +52,8 @@ export async function GET() {
 
   return NextResponse.json({
     meta: {
-      engine: "SQLite via Prisma ORM",
-      file: "db/attendance.db",
+      engine: "PostgreSQL via Prisma ORM",
+      file: "Neon Postgres (DATABASE_URL)",
       firestoreMirror: {
         users: "User",
         courses: "Course",
